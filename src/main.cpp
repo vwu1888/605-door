@@ -1,6 +1,9 @@
 #include <Arduino.h>
+#include <SPI.h>
+
 void setup() {
-// write your initialization code here
+    Serial.begin(9600);
+    Serial.println("Hello World");
 }
 
 void loop() {
