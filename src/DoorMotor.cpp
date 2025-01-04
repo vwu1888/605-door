@@ -4,18 +4,30 @@
 
 #include "DoorMotor.h"
 #include "Constants.h"
-#include <TMCStepper.h>
 
-DoorMotor::DoorMotor() : driver(&Serial2, DOOR_MOTOR.rSense, DOOR_MOTOR.driverAddress) {
-    pinMode(DOOR_MOTOR.enPin, OUTPUT);
-    pinMode(DOOR_MOTOR.stepPin, OUTPUT);
-    pinMode(DOOR_MOTOR.dirPin, OUTPUT);
-    digitalWrite(DOOR_MOTOR.enPin, LOW);
+DoorMotor::DoorMotor(const TMC2209Config &config) :
+driver(config.serialPort, config.rSense, config.driverAddress),
+motionControl(AccelStepper::MotorInterfaceType::DRIVER, config.stepPin, config.dirPin)
+{
+    DoorMotor::config = &config;
+    pinMode(config.enPin, OUTPUT);
+    pinMode(config.stepPin, OUTPUT);
+    pinMode(config.dirPin, OUTPUT);
+
+    motorDisable();
 
     driver.begin();
     driver.toff(4);
     driver.blank_time(24);
-    driver.rms_current(600);
+    driver.rms_current(config.rmsCurrent);
     driver.microsteps(16);
     driver.pwm_autoscale(true);
+}
+
+void DoorMotor::motorEnable() {
+    digitalWrite(config->enPin, LOW);
+}
+
+void DoorMotor::motorDisable() {
+    digitalWrite(config->enPin, HIGH);
 }
