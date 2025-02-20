@@ -1,6 +1,7 @@
 //
 // Created by vwu on 12/19/2024.
 //
+#pragma once
 #include <AccelStepper.h>
 
 #include "Constants.h"
@@ -9,21 +10,17 @@
 #ifndef DOORMOTOR_H
 #define DOORMOTOR_H
 
-
-
 class DoorMotor {
     private:
         TMC2209Stepper driver;
         AccelStepper motionControl;
     protected:
-        static const TMC2209Config *config;
+        const TMC2209Config* config;
     public:
-        explicit DoorMotor(const TMC2209Config &config);
+        explicit DoorMotor(const TMC2209Config* config);
 
-        static void motorEnable();
-        static void motorDisable();
+        void motorEnable();
+        void motorDisable();
 };
-
-
 
 #endif //DOORMOTOR_H
